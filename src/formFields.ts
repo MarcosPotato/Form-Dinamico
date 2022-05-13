@@ -1,3 +1,5 @@
+import { CalendarPickerView } from "@mui/lab"
+
 export interface FieldsType{
     name: string
     label: string
@@ -11,8 +13,11 @@ export interface FieldsType{
     contentType?: "email" | "number" | "password" | "text"
     isRequired: boolean
     validationMessage?: string
+    mask?: string
     validationType: string
     options?: Array<any>
+    inputFormat?: string
+    views?: CalendarPickerView[]
 }
 
 export const fields: FieldsType[] = [
@@ -37,7 +42,7 @@ export const fields: FieldsType[] = [
         mobile_grid_size: 12,
         type: "text",
         size: "small",
-        contentType: "email",
+        contentType: "text",
         isRequired: true,
         validationMessage: "E-mail Inválido",
         validationType: "email"
@@ -45,6 +50,7 @@ export const fields: FieldsType[] = [
     {
         name: "document",
         label: "CPF/CNPJ",
+        mask: "document",
         defaultValue: "value",
         desk_grid_size: 4,
         mobile_grid_size: 12,
@@ -90,5 +96,55 @@ export const fields: FieldsType[] = [
             "teste2",
             "teste3",
         ]
+    },
+    {
+        name: "date",
+        label: "Date",
+        inputFormat: "dd/MM/yyyy",
+        views: ['day'],
+        desk_grid_size: 4,
+        mobile_grid_size: 12,
+        type: "date",
+        size: "small",
+        isRequired: true,
+        validationType: "text"
+    },
+    {
+        name: "cep",
+        label: "CEP",
+        mask: "cep",
+        desk_grid_size: 4,
+        mobile_grid_size: 12,
+        type: "text",
+        size: "small",
+        contentType: "text",
+        isRequired: true,
+        validationMessage: "Field 1 is required",
+        validationType: "text"
+    },
+    {
+        name: "numbers",
+        label: "Numbers",
+        mask: "number",
+        desk_grid_size: 4,
+        mobile_grid_size: 12,
+        type: "text",
+        size: "small",
+        contentType: "text",
+        isRequired: true,
+        validationMessage: "Field 1 is required",
+        validationType: "text"
+    },
+    {
+        name: "oi",
+        label: "teste",
+        desk_grid_size: 4,
+        mobile_grid_size: 12,
+        type: "text",
+        size: "small",
+        contentType: "number",
+        isRequired: true,
+        validationMessage: "Field 1 is required",
+        validationType: "text"
     },
 ]

@@ -12,6 +12,7 @@ import { Container, FormCard } from './style'
 import { Grid } from '@mui/material'
 import { getValidationsForm } from './getYupValidations'
 import getValidationErros from './getValidationErros'
+import { inputMasks } from './inputMasks'
 
 interface FormData {
     [key: string]: string | Date
@@ -58,10 +59,16 @@ const App: React.FC = () => {
                 <Form ref={ formRef } onSubmit={ handleSubmit }>
                     <Grid container spacing={2}>
                         { fields.map(field => {
-                            const Field = getInputField(field.type)
+                            const InputField = getInputField(field.type)
                             return (
-                                <Grid item xs={ field.mobile_grid_size } md={ field.desk_grid_size }>
-                                    <Field { ...field } type={ field.contentType || "text" } fullWidth />
+                                <Grid key={ field.name } item xs={ field.mobile_grid_size } md={ field.desk_grid_size }>
+                                    <InputField 
+                                        { ...field } 
+                                        type={ field.contentType || "text" } 
+                                        fullWidth 
+                                        onChangeRule={ field.mask ? inputMasks[field.mask] : undefined }
+                                        onPasteRule={ field.mask ? inputMasks[field.mask] : undefined }  
+                                    />
                                 </Grid>
                             )
                         })}

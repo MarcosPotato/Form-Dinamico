@@ -8,6 +8,10 @@ export const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+
+    .MuiGrid-item{
+        margin-bottom: 12px !important;
+    }
 `
 
 export const FormCard = styled.div`
