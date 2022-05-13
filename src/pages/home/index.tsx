@@ -4,15 +4,16 @@ import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
 import * as Yup from 'yup'
 
-import { getInputField } from './components/InputsFields'
+import { fields } from '../../utils/validations/formFields'
+import { getValidationsForm } from '../../utils/validations/dynamicForm/getYupValidations'
+import getValidationErros from '../../utils/validations/dynamicForm/getValidationErros'
+import { inputMasks } from '../../utils/masks/inputMasks'
 
-import { fields } from './formFields'
+import { getInputField } from '../../components/InputsFields'
+
+import { Grid } from '@mui/material'
 
 import { Container, FormCard } from './style'
-import { Grid } from '@mui/material'
-import { getValidationsForm } from './getYupValidations'
-import getValidationErros from './getValidationErros'
-import { inputMasks } from './inputMasks'
 
 interface FormData {
     [key: string]: string | Date
