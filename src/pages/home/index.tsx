@@ -55,7 +55,7 @@ const App: React.FC = () => {
             <FormCard>
                 <Form ref={ formRef } onSubmit={ handleSubmit }>
                     <DynamicForm fields={ fields } />
-                    <button style={{ marginTop: "50px" }} type="submit">Click me</button>
+                    <button type="submit">Click me</button>
                 </Form>
             </FormCard>
         </Container>
