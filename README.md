@@ -68,48 +68,50 @@ Após isso deve-se passar como propriedades um array de <i>FieldsType</i> compos
     }
     </code>
 </pre>
+<br />
+** Este é um tipo do <a href="https://mui.com/pt/x/api/date-pickers/date-picker/">DatePicker</a> do @mui/lab
 
-<br /><br /><br />
+<br /><br />
 
 Após isso os campos serão renderizados. A captura dos dados é recebida no evento submit da tag Form do @unform/web e para realizar a validação dinâmica utilize o seguinte trecho de código: <br />
 
 <pre>
-    <code>
-        const handleSubmit = async(data: FormData) => {
+<code>
+const handleSubmit = async(data: FormData) => {
 
-            ...
+    ...
 
-            let validationObject = {}
+    let validationObject = {}
 
-            fields.forEach(field => {
-                validationObject[field.name] = getValidationsForm({
-                    validationType: field.validationType, 
-                    isRequired: field.isRequired, 
-                    label: field.label,
-                    validationMessage: field.validationMessage
-                })
-            })
-            
-            try{
-                const schema = Yup.object().shape(validationObject)
+    fields.forEach(field => {
+        validationObject[field.name] = getValidationsForm({
+            validationType: field.validationType, 
+            isRequired: field.isRequired, 
+            label: field.label,
+            validationMessage: field.validationMessage
+        })
+    })
+    
+    try{
+        const schema = Yup.object().shape(validationObject)
 
-                await schema.validate(data, {
-                    abortEarly: false
-                })
+        await schema.validate(data, {
+            abortEarly: false
+        })
 
-                // coloque aqui a continuação da função caso todos os campos estajam validados
-            } catch(error: any){
-                if(error instanceof Yup.ValidationError){
-                    const errors = getValidationErros(error)
+        // coloque aqui a continuação da função caso todos os campos estajam validados
+    } catch(error: any){
+        if(error instanceof Yup.ValidationError){
+            const errors = getValidationErros(error)
 
-                    formRef.current?.setErrors(errors)
-                }
-
-                ...
-                // coloque aqui a tratativa de erros que não sejam validações de campos usando o Yup
-            }
+            formRef.current?.setErrors(errors)
         }
-    </code>
+
+        ...
+        // coloque aqui a tratativa de erros que não sejam validações de campos usando o Yup
+    }
+}
+</code>
 </pre>
 
 <br />
@@ -127,58 +129,58 @@ Caso seja necessário podemos personalizar as validações que são realizadas n
 Para fazer isso navegue até src/utils/validations/dynamicForm/formValidations.ts. Crie um novo case no switch com o nome da validação que deseja criar: <br />
 
 <pre>
-    <code>
-        export const formValidations = ({ type, validationMessage, yupInstance }: ValidationsProps): YupIntance => {
+<code>
+export const formValidations = ({ type, validationMessage, yupInstance }: ValidationsProps): YupIntance => {
 
-            ...
+    ...
 
-            switch(type){
-                ...
-                case "validacao_personalizada":
-                    return // seu código aqui
-                default:
-                    return yupInstance
-            }
-        }
-    </code>
+    switch(type){
+        ...
+        case "validacao_personalizada":
+            return // seu código aqui
+        default:
+            return yupInstance
+    }
+}
+</code>
 </pre>
 
 <br />
 
 Nesse retorno podemos realizar de 2 formar, voltando a validação do próprio Yup: <br />
 <pre>
-    <code>
+<code>
+...
+    switch(type){
         ...
-            switch(type){
-                ...
-                case "validacao_personalizada":
-                    return yupInstance."metodo_do_yup"
-                ...
-            }
+        case "validacao_personalizada":
+            return yupInstance."metodo_do_yup"
         ...
-    </code>
+    }
+...
+</code>
 </pre>
 
 <br />
 
 Caso queira criar o medos personalizado deva utilizar a seguinte forma: <br />
 <pre>
-    <code>
+<code>
+...
+    switch(type){
         ...
-            switch(type){
-                ...
-                case "validacao_personalizada":
-                    return yupInstance.test("test-document-type", validationMessage, function(value){
-                        const { path, createError } = this
+        case "validacao_personalizada":
+            return yupInstance.test("test-document-type", validationMessage, function(value){
+                const { path, createError } = this
 
-                        // seu código validação
-                        // o retorno deve ser uma instancia de erro usando o createError ou um valor true para
-                        // o caso de passar na validação
+                // seu código validação
+                // o retorno deve ser uma instancia de erro usando o createError ou um valor true para
+                // o caso de passar na validação
 
-                        return createError({ path, message: validationMessage })
-                    })
-                ...
-            }
+                return createError({ path, message: validationMessage })
+            })
         ...
-    </code>
+    }
+...
+</code>
 </pre>
