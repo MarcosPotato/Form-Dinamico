@@ -1,30 +1,10 @@
-import { CalendarPickerView } from "@mui/lab"
-
-export interface FieldsType{
-    name: string
-    label: string
-    defaultValue?: string
-    defaultChecked?: boolean
-    defaultOpen?: any
-    desk_grid_size: number
-    mobile_grid_size: number
-    size?: "small" | "medium"
-    type: "text" | "select" | "autocomplete" | "date"
-    contentType?: "email" | "number" | "password" | "text"
-    isRequired: boolean
-    validationMessage?: string
-    mask?: string
-    validationType: string
-    options?: Array<any>
-    inputFormat?: string
-    views?: CalendarPickerView[]
-}
+import { FieldsType } from "../../@types/dynamicFormFields"
 
 export const fields: FieldsType[] = [
     {
         name: "field1",
         label: "Field 1",
-        defaultValue: "value",
+        initialValue: "value",
         desk_grid_size: 4,
         mobile_grid_size: 12,
         type: "text",
@@ -37,7 +17,7 @@ export const fields: FieldsType[] = [
     {
         name: "field3",
         label: "Field 3",
-        defaultValue: "value",
+        initialValue: "value",
         desk_grid_size: 4,
         mobile_grid_size: 12,
         type: "text",
@@ -51,7 +31,7 @@ export const fields: FieldsType[] = [
         name: "document",
         label: "CPF/CNPJ",
         mask: "document",
-        defaultValue: "value",
+        initialValue: "value",
         desk_grid_size: 4,
         mobile_grid_size: 12,
         type: "text",
@@ -69,7 +49,7 @@ export const fields: FieldsType[] = [
     {
         name: "select",
         label: "Combo",
-        defaultValue: "1",
+        initialValue: "1",
         desk_grid_size: 4,
         mobile_grid_size: 12,
         type: "select",

@@ -11,7 +11,7 @@ interface FormAutoCompleteProps {
     label: string
     loading?: boolean
     options?: Array<string>
-    defaultValue?: string
+    initialValue?: string
     disabled?: boolean
     cleanRules?: () => void
     onPasteRule?: (event: any, input: TextFieldProps | null) => void
@@ -28,7 +28,7 @@ const FormAutoComplete: React.ForwardRefRenderFunction<FormAutoCompleteRef,FormA
     label,
     loading,
     options,
-    defaultValue,
+    initialValue,
     disabled
 }, ref) => {
 
@@ -36,7 +36,7 @@ const FormAutoComplete: React.ForwardRefRenderFunction<FormAutoCompleteRef,FormA
     const { fieldName, registerField, error } = useField(name)
 
     const [hasAnError, setHasAnError] = useState(false)
-    const [value, setValue] = useState(defaultValue || "")
+    const [value, setValue] = useState(initialValue || "")
 
     const [optionsList, setOptionsList] = useState<string[]>(options || [])
 
@@ -65,7 +65,7 @@ const FormAutoComplete: React.ForwardRefRenderFunction<FormAutoCompleteRef,FormA
         if(!!error){ setHasAnError(true) }
     }, [error])
 
-    useEffect(() => { setValue(defaultValue || "") }, [defaultValue])
+    useEffect(() => { setValue(initialValue || "") }, [initialValue])
 
     useEffect(() => {
         if(value === ""){

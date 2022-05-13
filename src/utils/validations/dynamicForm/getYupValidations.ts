@@ -1,12 +1,17 @@
 import * as Yup from "yup"
+import { GetValidationsParams } from "../../../@types/dynamicValidations"
+
 import { formValidations } from './formValidations'
 
-interface GetValidationsParams{
-    validationType: string
-    isRequired: boolean
-    label: string
-    validationMessage?: string
-}
+Yup.addMethod(Yup.string, "getYupValidation", function(type: string, validationMessage: string){
+    const validation = formValidations({
+        yupInstance: this,
+        type,
+        validationMessage
+    })
+
+    return validation 
+})
 
 const getPrefix = (string: string) => {
     const lastLetter = string.split("")[string.split("").length - 1].toUpperCase()
@@ -25,13 +30,3 @@ export const getValidationsForm = ({ validationType, isRequired, label, validati
         return Yup.string().getYupValidation(validationType, validationMessage as string).notRequired()
     }
 }
-
-Yup.addMethod(Yup.string, "getYupValidation", function(type: string, validationMessage: string){
-    const validation = formValidations({
-        yupInstance: this,
-        type,
-        validationMessage
-    })
-
-    return validation 
-})

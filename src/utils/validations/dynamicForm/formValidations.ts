@@ -1,14 +1,5 @@
-import * as Yup from 'yup'
-import { AnyObject } from 'yup/lib/types'
-import { validadeCNPJ, validadeCPF } from './validateDocuments'
-
-type YupIntance = Yup.StringSchema<string | undefined, AnyObject, string | undefined>
-
-interface ValidationsProps{
-    type: string
-    validationMessage: string
-    yupInstance: YupIntance
-}
+import { ValidationsProps, YupIntance } from '../../../@types/dynamicValidations'
+import { validadeCNPJ, validadeCPF } from '../validateDocuments'
 
 export const formValidations = ({ type, validationMessage, yupInstance }: ValidationsProps): YupIntance => {
 

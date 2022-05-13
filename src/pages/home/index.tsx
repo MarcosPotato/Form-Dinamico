@@ -6,14 +6,10 @@ import * as Yup from 'yup'
 
 import { fields } from '../../utils/validations/formFields'
 import { getValidationsForm } from '../../utils/validations/dynamicForm/getYupValidations'
-import getValidationErros from '../../utils/validations/dynamicForm/getValidationErros'
-import { inputMasks } from '../../utils/masks/inputMasks'
-
-import { getInputField } from '../../components/InputsFields'
-
-import { Grid } from '@mui/material'
+import getValidationErros from '../../utils/validations/getValidationErros'
 
 import { Container, FormCard } from './style'
+import DynamicForm from '../../components/DynamicForm'
 
 interface FormData {
     [key: string]: string | Date
@@ -58,22 +54,7 @@ const App: React.FC = () => {
         <Container>
             <FormCard>
                 <Form ref={ formRef } onSubmit={ handleSubmit }>
-                    <Grid container spacing={2}>
-                        { fields.map(field => {
-                            const InputField = getInputField(field.type)
-                            return (
-                                <Grid key={ field.name } item xs={ field.mobile_grid_size } md={ field.desk_grid_size }>
-                                    <InputField 
-                                        { ...field } 
-                                        type={ field.contentType || "text" } 
-                                        fullWidth 
-                                        onChangeRule={ field.mask ? inputMasks[field.mask] : undefined }
-                                        onPasteRule={ field.mask ? inputMasks[field.mask] : undefined }  
-                                    />
-                                </Grid>
-                            )
-                        })}
-                    </Grid>
+                    <DynamicForm fields={ fields } />
                     <button style={{ marginTop: "50px" }} type="submit">Click me</button>
                 </Form>
             </FormCard>
