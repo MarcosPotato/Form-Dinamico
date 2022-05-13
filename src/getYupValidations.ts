@@ -1,4 +1,5 @@
 import * as Yup from "yup"
+import { formValidations } from './formValidations'
 
 interface GetValidationsParams{
     validationType: string
@@ -6,18 +7,6 @@ interface GetValidationsParams{
     label: string
     validationMessage?: string
 }
-
-Yup.addMethod(Yup.string, "getYupValidation", function(type: string, validationMessage: string){
-    if(type === "text"){
-        return this
-    }
-
-    if(type === "email"){
-        return this.email(validationMessage)
-    }
-
-    return this
-})
 
 const getPrefix = (string: string) => {
     const lastLetter = string.split("")[string.split("").length - 1].toUpperCase()
@@ -30,11 +19,19 @@ const getPrefix = (string: string) => {
 }
 
 export const getValidationsForm = ({ validationType, isRequired, label, validationMessage }: GetValidationsParams) => {
-    console.log({ validationType, isRequired })
-
     if(isRequired){
         return Yup.string().getYupValidation(validationType, validationMessage as string).required(`${label} é obrigatóri${getPrefix(label)}`)
     } else{
         return Yup.string().getYupValidation(validationType, validationMessage as string).notRequired()
     }
 }
+
+Yup.addMethod(Yup.string, "getYupValidation", function(type: string, validationMessage: string){
+    const validation = formValidations({
+        yupInstance: this,
+        type,
+        validationMessage
+    })
+
+    return validation 
+})

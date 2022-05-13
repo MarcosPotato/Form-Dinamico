@@ -11,9 +11,9 @@ export const getInputField = (type: InputsType) => {
             return FormInput
         case "select":
             return FormSelect
-        case "autocomplete":
-            return FormDataPicker
         case "date":
+            return FormDataPicker
+        case "autocomplete":
             return FormAutoComplete
         default:
             return FormInput

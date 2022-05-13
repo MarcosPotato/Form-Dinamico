@@ -33,12 +33,8 @@ const App: React.FC = () => {
                 validationMessage: field.validationMessage
             })
         })
-
         
         try{
-            console.log(validationObject)
-            console.log(data)
-
             const schema = Yup.object().shape(validationObject)
 
             await schema.validate(data, {
@@ -48,7 +44,6 @@ const App: React.FC = () => {
             console.log("validado")
             console.log(data)
         } catch(error: any){
-            console.log(error)
             if(error instanceof Yup.ValidationError){
                 const errors = getValidationErros(error)
 
@@ -66,7 +61,7 @@ const App: React.FC = () => {
                             const Field = getInputField(field.type)
                             return (
                                 <Grid item xs={ field.mobile_grid_size } md={ field.desk_grid_size }>
-                                    <Field { ...field } fullWidth />
+                                    <Field { ...field } type={ field.contentType || "text" } fullWidth />
                                 </Grid>
                             )
                         })}
