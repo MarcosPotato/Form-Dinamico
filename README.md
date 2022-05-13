@@ -38,7 +38,7 @@ Após isso deve-se passar como propriedades um array de <i>FieldsType</i> compos
 <br />
 
 | Campos              | Descrição                                                                     | Obrigatório                                  | Tipo                                       |
-| ------------------- | ----------------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------ |
+| ------------------- | ----------------------------------------------------------------------------- | :------------------------------------------: | :----------------------------------------: |
 |  name               |  Nome do input. Este valor deve ser único, servindo como um ID para o unform  | Sim                                          | string                                     |
 |  label              |  Nome a ser mostrado do Input                                                 | Sim                                          | string                                     |
 |  initialValue       |  Valor inicial a ser carregado no input | Obrigatório                         | Não                                          | string, number ou undefined                |
