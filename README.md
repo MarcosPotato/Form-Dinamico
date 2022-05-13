@@ -8,32 +8,30 @@ Para utilizar o formulário dinâmico você de importa-lo de "src/components/Dyn
 Ele deve ser utilizado dentro dessa tag para que os campos sejam registrados no unform permitindo a fácil implementação, manipulação e validação do campo a ser carregado
 Após isso deve-se passar como propriedades um array de <i>FieldsType</i> composto pela seguinte estrutura: <br />
 
-<pre>
-<code>
-    {
-        name: string
-        label: string
-        initialValue?: any
-        desk_grid_size: number
-        mobile_grid_size: number
-        size?: "small" | "medium"
-        type: "text" | "select" | "autocomplete" | "date"
-        contentType?: "email" | "number" | "password" | "text"
-        isRequired: boolean
-        validationMessage?: string
-        mask?: string
-        validationType: string
+``` typescript
+{
+    name: string
+    label: string
+    initialValue?: any
+    desk_grid_size: number
+    mobile_grid_size: number
+    size?: "small" | "medium"
+    type: "text" | "select" | "autocomplete" | "date"
+    contentType?: "email" | "number" | "password" | "text"
+    isRequired: boolean
+    validationMessage?: string
+    mask?: string
+    validationType: string
 
-        options?: Array<any> //Somente para os campos do tipo autocomplete (string array) e select (SelectOptions arrya)
+    options?: Array<any> //Somente para os campos do tipo autocomplete (string array) e select (SelectOptions arrya)
 
-        inputFormat?: string //Somente para campos de data
+    inputFormat?: string //Somente para campos de data
 
-        views?: CalendarPickerView[] //Somente para campos de data
-        minDate?: Date //Somente para campos de data
-        maxDate?: Date //Somente para campos de data
-    }
-    </code>
-</pre>
+    views?: CalendarPickerView[] //Somente para campos de data
+    minDate?: Date //Somente para campos de data
+    maxDate?: Date //Somente para campos de data
+}
+```
 
 <br />
 
@@ -60,14 +58,12 @@ Após isso deve-se passar como propriedades um array de <i>FieldsType</i> compos
 <br />
 
 * Para inputs de autocomplete deve ser um array de string e para o input select deve ser um array utilizando o seguinte objeto:<br />
-<pre>
-    <code>
-    {
-        value: number | string,
-        label: string
-    }
-    </code>
-</pre>
+``` typescript
+{
+    value: number | string,
+    label: string
+}
+```
 <br />
 ** Este é um tipo do <a href="https://mui.com/pt/x/api/date-pickers/date-picker/">DatePicker</a> do @mui/lab
 
@@ -75,8 +71,7 @@ Após isso deve-se passar como propriedades um array de <i>FieldsType</i> compos
 
 Após isso os campos serão renderizados. A captura dos dados é recebida no evento submit da tag Form do @unform/web e para realizar a validação dinâmica utilize o seguinte trecho de código: <br />
 
-<pre>
-<code>
+``` typescript
 const handleSubmit = async(data: FormData) => {
 
     ...
@@ -111,8 +106,7 @@ const handleSubmit = async(data: FormData) => {
         // coloque aqui a tratativa de erros que não sejam validações de campos usando o Yup
     }
 }
-</code>
-</pre>
+```
 
 <br />
 
@@ -128,8 +122,7 @@ const handleSubmit = async(data: FormData) => {
 Caso seja necessário podemos personalizar as validações que são realizadas nos campo de formulário.<br />
 Para fazer isso navegue até src/utils/validations/dynamicForm/formValidations.ts. Crie um novo case no switch com o nome da validação que deseja criar: <br />
 
-<pre>
-<code>
+``` typescript
 export const formValidations = ({ type, validationMessage, yupInstance }: ValidationsProps): YupIntance => {
 
     ...
@@ -142,14 +135,12 @@ export const formValidations = ({ type, validationMessage, yupInstance }: Valida
             return yupInstance
     }
 }
-</code>
-</pre>
+```
 
 <br />
 
 Nesse retorno podemos realizar de 2 formar, voltando a validação do próprio Yup: <br />
-<pre>
-<code>
+``` typescript
 ...
     switch(type){
         ...
@@ -158,14 +149,12 @@ Nesse retorno podemos realizar de 2 formar, voltando a validação do próprio Y
         ...
     }
 ...
-</code>
-</pre>
+```
 
 <br />
 
 Caso queira criar o medos personalizado deva utilizar a seguinte forma: <br />
-<pre>
-<code>
+``` typescript
 ...
     switch(type){
         ...
@@ -182,5 +171,4 @@ Caso queira criar o medos personalizado deva utilizar a seguinte forma: <br />
         ...
     }
 ...
-</code>
-</pre>
+```
