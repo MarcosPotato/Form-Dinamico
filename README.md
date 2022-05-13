@@ -36,6 +36,7 @@ Após isso deve-se passar como propriedades um array de <i>FieldsType</i> compos
 </pre>
 
 <br />
+
 | Campos              | Descrição                                                                     | Obrigatório                                  | Tipo                                       |
 | ------------------- | ----------------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------ |
 |  name               |  Nome do input. Este valor deve ser único, servindo como um ID para o unform  | Sim                                          | string                                     |
@@ -55,6 +56,7 @@ Após isso deve-se passar como propriedades um array de <i>FieldsType</i> compos
 |  views              |  Tipo de visualização da data                                                 | Somente se o tipo for date                   | CalendarPickerView[]**                     |
 |  minDate            |  Data mínima a ser selecionada no input                                       | Não (válido apenas para o tipo date)         | Date                                       |
 |  maxDate            |  Data máxima a ser selecionada no input                                       | Não (válido apenas para o tipo date)         | Date                                       |
+
 <br />
 
 * Para inputs de autocomplete deve ser um array de string e para o input select deve ser um array utilizando o seguinte objeto:<br />
@@ -111,10 +113,12 @@ Após isso os campos serão renderizados. A captura dos dados é recebida no eve
 </pre>
 
 <br />
+
 | Campos            | Descrição                                                           |
 | ----------------- | ------------------------------------------------------------------- |
 |  fields           |  variavel que armazena o array dos campos                           |
 |  validationObject |  estrutura para o shape do yup que é gerada de acordo com os campos |
+
 <br />
 
 # Personalização 
