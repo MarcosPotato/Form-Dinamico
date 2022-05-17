@@ -1,6 +1,15 @@
 import React from "react"
-import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react"
+import { 
+    useEffect, 
+    useRef, 
+    useState, 
+    forwardRef, 
+    useImperativeHandle,
+    useCallback
+} from "react"
 import { useField } from "@unform/core"
+
+import api from "../../../services/api"
 
 import { InputFieldsRef } from '../index'
 
@@ -22,7 +31,13 @@ interface FormAutoCompleteProps {
     initialValue?: string
     disabled?: boolean
     isAsyncOptionsData?: boolean
-    
+    asyncResquest?: {
+        endpoint: string,
+        params?: {
+            [key: string]: string
+        }
+    }
+
     cleanRules?: () => void
     observerValue?: (fieldName: string) => void
     onPasteRule?: (event: any, input: TextFieldProps | null) => void
@@ -36,6 +51,8 @@ const FormAutoComplete: React.ForwardRefRenderFunction<InputFieldsRef,FormAutoCo
     options,
     disabled,
     initialValue,
+    asyncResquest,
+    isAsyncOptionsData,
     observerValue
 }, ref) => {
 
@@ -47,9 +64,50 @@ const FormAutoComplete: React.ForwardRefRenderFunction<InputFieldsRef,FormAutoCo
 
     const [optionsList, setOptionsList] = useState<string[]>(options || [])
 
+    const [inputIdleTimeoutID, setInputIdleTimeoutID] = useState<NodeJS.Timeout>()
+
+    const getOptions = useCallback(async(value: string) => {
+        console.log("teste autocomplete")
+        try{
+            const response = await api.get(asyncResquest?.endpoint as string, {
+                params: {
+                    ...asyncResquest?.params,
+                    pesquisa: value,
+                    company: "01",
+                    brach: "01"
+                },
+                headers: {
+                    authorization: "3c478422074463b32b3b276d8087cc8ac659f597dc3cab0300ed0b30d8eeb0c07d31c937498270a388dd29f10e6e3683278ebd8ae9661de65711161e6b387c34"
+                }
+            })
+
+            if(!!response.data.data){
+                setOptionsList(response.data.data.consultapadrao.map(item => `${item.CC2_CODMUN} - ${item.CC2_MUN}`))
+            }
+
+            console.log(response)
+        }catch(error: any){
+            console.log(error)
+        }
+    },[asyncResquest])
+
+    const updateOptionsList = useCallback((value: string) => {
+        setOptionsList(options || [])
+        if(inputIdleTimeoutID !== undefined){
+            clearInterval(inputIdleTimeoutID)
+        }
+        const timeoutId = setTimeout(() => {
+            console.log("atualizando")
+            getOptions(value)
+        }, 1000)
+
+        setInputIdleTimeoutID(timeoutId)
+    },[inputIdleTimeoutID, getOptions, options])
+
     useImperativeHandle(ref, () => ({
         fieldName: fieldName,
         getValue: () => ( inputRef.current?.value || "" ),
+        refreshData: isAsyncOptionsData ? updateOptionsList : undefined,
         changeValue: (value) => {
             if(inputRef.current?.value){
                 inputRef.current.value = value || ""

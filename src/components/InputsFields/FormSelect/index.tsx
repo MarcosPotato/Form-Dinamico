@@ -9,6 +9,8 @@ import {
 } from "react"
 import { useField } from "@unform/core"
 
+import api from "../../../services/api"
+
 import { InputFieldsRef } from "../index"
 
 import {
@@ -22,7 +24,7 @@ import {
 import { CheckIcon, CloseIcon, Container, FormField, ErrorMessage } from "./style"
 
 interface Option{
-    value: string | number | readonly string[] | undefined
+    value: string | number 
     label: string
 }
 
@@ -31,6 +33,12 @@ interface FormSelectProps extends SelectProps{
     options?: Array<Option>
     initialValue?: string
     isAsyncOptionsData?: boolean
+    asyncResquest?: {
+        endpoint: string,
+        params?: {
+            [key: string]: string
+        }
+    }
 
     cleanRules?: () => void
     observerValue?: (fieldName: string) => void
@@ -42,6 +50,7 @@ const FormSelect: React.ForwardRefRenderFunction<InputFieldsRef, FormSelectProps
     label, 
     options, 
     initialValue,
+    asyncResquest,
     isAsyncOptionsData,
     cleanRules,
     onChangeRule, 
@@ -60,22 +69,43 @@ const FormSelect: React.ForwardRefRenderFunction<InputFieldsRef, FormSelectProps
 
     const [optionsList, setOptionsList] = useState<Option[]>(options || [])
 
+    const getOptions = useCallback(async(value: string) => {
+        try{
+            const response = await api.get(asyncResquest?.endpoint as string, {
+                params: {
+                    ...asyncResquest?.params,
+                    pesquisa: value,
+                    company: "01",
+                    brach: "01"
+                },
+                headers: {
+                    authorization: "3c478422074463b32b3b276d8087cc8ac659f597dc3cab0300ed0b30d8eeb0c07d31c937498270a388dd29f10e6e3683278ebd8ae9661de65711161e6b387c34"
+                }
+            })
+
+            if(!!response.data.data){
+                setOptionsList(response.data.data.consultapadrao.map(item => ({
+                    label: item.CC2_MUN,
+                    value: item.CC2_CODMUN
+                })))
+            }
+        }catch(error: any){
+            console.log(error)
+        }
+    },[asyncResquest])
+
     const updateOptionsList = useCallback((value: string) => {
+        setOptionsList(options || [])
         if(inputIdleTimeoutID !== undefined){
             clearInterval(inputIdleTimeoutID)
         }
         const timeoutId = setTimeout(() => {
             console.log("atualizando")
-
-            // colocar request
-            setOptionsList(prev => [
-                ...prev,
-                { value: value, label: `${prev.length + 1}` }
-            ])
+            getOptions(value)
         }, 1000)
 
         setInputIdleTimeoutID(timeoutId)
-    },[inputIdleTimeoutID])
+    },[inputIdleTimeoutID, getOptions, options])
 
     useImperativeHandle(ref, () => ({
         fieldName: fieldName,
@@ -96,9 +126,7 @@ const FormSelect: React.ForwardRefRenderFunction<InputFieldsRef, FormSelectProps
         registerField({
             name: fieldName,
             ref: inputRef.current,
-            getValue(refInput){
-                return refInput.value
-            } 
+            path: "value"
         })
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -157,8 +185,8 @@ const FormSelect: React.ForwardRefRenderFunction<InputFieldsRef, FormSelectProps
                             Nenhum resultado
                         </MenuItem>
                     }
-                    { optionsList.map((option, index) => (
-                        <MenuItem key={ index } value={ option.value }>
+                    { optionsList.map((option) => (
+                        <MenuItem key={ option.value } value={ option.value }>
                             { option.label }
                         </MenuItem>
                     ))}
