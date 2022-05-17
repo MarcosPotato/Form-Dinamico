@@ -1,6 +1,13 @@
 import React from "react"
-import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react"
+import { 
+    useEffect, 
+    useRef, 
+    useState,
+    forwardRef, 
+    useImperativeHandle 
+} from "react"
 import { useField } from "@unform/core"
+import { InputFieldsRef } from "../index"
 
 import { TextFieldProps, BaseTextFieldProps } from "@mui/material"
 
@@ -10,26 +17,23 @@ interface FormInputProps extends BaseTextFieldProps{
     name: string
     initialValue?: string,
     loading?: boolean
+    observerValue?: (fieldName: string) => void
     onChangeRule?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, input: TextFieldProps | null, value?: any) => void
     onPasteRule?: (event: any, input: TextFieldProps | null) => void
     cleanRules?: () => void
 }
 
-export interface FormInputRef{
-    changeValue(value: string): void
-    getValue(): string | unknown
-}
-
-const FormInput: React.ForwardRefRenderFunction<FormInputRef, FormInputProps> = ({ 
+const FormInput: React.ForwardRefRenderFunction<InputFieldsRef, FormInputProps> = ({ 
     name, 
-    label,
-    initialValue,
-    onChangeRule, 
-    onPasteRule, 
-    cleanRules, 
     type,
-    children,
+    label,
     loading, 
+    children,
+    initialValue,
+    cleanRules,
+    onPasteRule, 
+    onChangeRule, 
+    observerValue,
     ...rest 
 }, ref) => {
 
@@ -41,6 +45,8 @@ const FormInput: React.ForwardRefRenderFunction<FormInputRef, FormInputProps> = 
     const [value, setValue] = useState<string>(initialValue || "")
 
     useImperativeHandle(ref, () => ({
+        fieldName: fieldName,
+        getValue: () => ( inputRef.current?.value as string),
         changeValue: (value) => {
             setValue(value)
             if(inputRef.current?.value){
@@ -52,8 +58,7 @@ const FormInput: React.ForwardRefRenderFunction<FormInputRef, FormInputProps> = 
             } else{
                 setShrinkLabel(true)
             }
-        },
-        getValue: () => ( inputRef.current?.value as string)
+        }
     }))
 
     useEffect(() => {
@@ -82,7 +87,11 @@ const FormInput: React.ForwardRefRenderFunction<FormInputRef, FormInputProps> = 
         if(value === ""){
             setHasAnError(false)
         }
-    }, [value])
+
+        if(observerValue){
+            observerValue(fieldName)
+        }
+    }, [value, fieldName, observerValue ])
     
     return(
         <Container>

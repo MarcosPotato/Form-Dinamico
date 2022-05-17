@@ -12,6 +12,8 @@ export const formValidations = ({ type, validationMessage, yupInstance }: Valida
             return yupInstance
         case "email":
             return yupInstance.email(validationMessage)
+        case "verify_length":
+            return yupInstance.max(8, validationMessage)
         case "document":
             return yupInstance.test("test-document-type", validationMessage, function(value){
                 const { path, createError } = this

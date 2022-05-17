@@ -2,9 +2,17 @@ import React from "react"
 import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react"
 import { useField } from "@unform/core"
 
-import { CheckIcon, CloseIcon, Container, ErrorMessage, Input } from "./style"
+import { InputFieldsRef } from '../index'
 
 import { Autocomplete, TextFieldProps } from '@mui/material'
+
+import { 
+    CheckIcon, 
+    CloseIcon, 
+    Container, 
+    ErrorMessage, 
+    Input 
+} from "./style"
 
 interface FormAutoCompleteProps {
     name: string
@@ -13,23 +21,22 @@ interface FormAutoCompleteProps {
     options?: Array<string>
     initialValue?: string
     disabled?: boolean
+    isAsyncOptionsData?: boolean
+    
     cleanRules?: () => void
+    observerValue?: (fieldName: string) => void
     onPasteRule?: (event: any, input: TextFieldProps | null) => void
     onChangeRule?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, input: TextFieldProps | null, value?: any) => void
 }
 
-export interface FormAutoCompleteRef{
-    changeValue(value: string): void
-    getValue(): string | unknown
-}
-
-const FormAutoComplete: React.ForwardRefRenderFunction<FormAutoCompleteRef,FormAutoCompleteProps> = ({ 
+const FormAutoComplete: React.ForwardRefRenderFunction<InputFieldsRef,FormAutoCompleteProps> = ({ 
     name, 
     label,
     loading,
     options,
+    disabled,
     initialValue,
-    disabled
+    observerValue
 }, ref) => {
 
     const inputRef = useRef<TextFieldProps>(null)
@@ -41,6 +48,8 @@ const FormAutoComplete: React.ForwardRefRenderFunction<FormAutoCompleteRef,FormA
     const [optionsList, setOptionsList] = useState<string[]>(options || [])
 
     useImperativeHandle(ref, () => ({
+        fieldName: fieldName,
+        getValue: () => ( inputRef.current?.value || "" ),
         changeValue: (value) => {
             if(inputRef.current?.value){
                 inputRef.current.value = value || ""
@@ -49,8 +58,7 @@ const FormAutoComplete: React.ForwardRefRenderFunction<FormAutoCompleteRef,FormA
                     setHasAnError(false)
                 }
             }
-        },
-        getValue: () => ( inputRef.current?.value || "" )
+        }
     }))
 
     useEffect(() => {
@@ -71,7 +79,11 @@ const FormAutoComplete: React.ForwardRefRenderFunction<FormAutoCompleteRef,FormA
         if(value === ""){
             setHasAnError(false)
         }
-    }, [value])
+
+        if(observerValue){
+            observerValue(fieldName)
+        }
+    }, [value, fieldName, observerValue ])
 
     useEffect(() => {
         setOptionsList(options || [])

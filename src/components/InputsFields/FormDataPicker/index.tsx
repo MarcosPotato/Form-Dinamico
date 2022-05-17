@@ -1,6 +1,8 @@
 import React from 'react'
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react'
 import { useField } from '@unform/core'
+
+import { InputFieldsRef } from '../index'
 
 import ptBrLocale from 'date-fns/locale/pt-BR'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
@@ -25,15 +27,38 @@ interface FormDatePickerProps{
     views?: readonly CalendarPickerView[] | undefined
     disabled?: boolean
     minDate?: Date
+    observerValue?: (fieldName: string) => void
 }
 
-const FormDatePicker: React.FC<FormDatePickerProps> = ({name, label, initialValue, size, fullWidth, ...rest}) => {
+const FormDatePicker: React.ForwardRefRenderFunction<InputFieldsRef, FormDatePickerProps> = ({
+    name, 
+    size, 
+    label, 
+    fullWidth,
+    initialValue, 
+    observerValue,
+    ...rest
+}, ref) => {
 
     const inputRef = useRef<HTMLInputElement>(null)
     const {fieldName, error, registerField} = useField(name)
 
     const [hasAnError, setHasAnError] = useState<boolean>(false)
     const [value, setValue] = useState<string | unknown>(initialValue || "")
+
+    useImperativeHandle(ref, () => ({
+        fieldName: fieldName,
+        getValue: () => ( inputRef.current?.value || "" ),
+        changeValue: (value) => {
+            if(inputRef.current?.value){
+                inputRef.current.value = value || ""
+                setValue(value || "")
+                if(inputRef.current.value === ""){
+                    setHasAnError(false)
+                }
+            }
+        }
+    }))
 
     useEffect(() => {
         registerField({
@@ -57,7 +82,11 @@ const FormDatePicker: React.FC<FormDatePickerProps> = ({name, label, initialValu
         if(value === ""){
             setHasAnError(false)
         }
-    }, [value])
+
+        if(observerValue){
+            observerValue(fieldName)
+        }
+    }, [value, fieldName, observerValue ])
 
     return(
         <Container>
@@ -101,4 +130,4 @@ const FormDatePicker: React.FC<FormDatePickerProps> = ({name, label, initialValu
     )
 }
 
-export default FormDatePicker
+export default forwardRef(FormDatePicker)

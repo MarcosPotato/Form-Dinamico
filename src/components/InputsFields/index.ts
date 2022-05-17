@@ -5,6 +5,13 @@ import FormAutoComplete from './FormAutoComplete'
 
 type InputsType = "text" | "select" | "autocomplete" | "date"
 
+export interface InputFieldsRef{
+    fieldName: string
+    changeValue(value: string): void
+    getValue(): string | unknown
+    refreshData?: (requiredValue: string) => void
+}
+
 export const getInputField = (type: InputsType) => {
     switch(type){
         case "text":

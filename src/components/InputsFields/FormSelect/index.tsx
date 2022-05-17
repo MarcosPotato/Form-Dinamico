@@ -1,6 +1,15 @@
 import React from "react"
-import { useState, useRef, useEffect, useImperativeHandle, forwardRef } from "react"
+import { 
+    useState, 
+    useRef, 
+    useEffect, 
+    useImperativeHandle, 
+    forwardRef,
+    useCallback
+} from "react"
 import { useField } from "@unform/core"
+
+import { InputFieldsRef } from "../index"
 
 import {
     Select,
@@ -19,35 +28,59 @@ interface Option{
 
 interface FormSelectProps extends SelectProps{
     name: string
-    initialValue?: string
-    onChangeRule?: (event: SelectChangeEvent<string>, input: HTMLInputElement | null, value?: any) => void
-    cleanRules?: () => void
     options?: Array<Option>
+    initialValue?: string
+    isAsyncOptionsData?: boolean
+
+    cleanRules?: () => void
+    observerValue?: (fieldName: string) => void
+    onChangeRule?: (event: SelectChangeEvent<string>, input: HTMLInputElement | null, value?: any) => void
 }
 
-export interface FormSelectRef {
-    changeValue(value: string): void
-    getValue(): string | unknown
-}
-
-const FormSelect: React.ForwardRefRenderFunction<FormSelectRef, FormSelectProps> = ({ 
+const FormSelect: React.ForwardRefRenderFunction<InputFieldsRef, FormSelectProps> = ({ 
     name, 
     label, 
-    initialValue, 
     options, 
+    initialValue,
+    isAsyncOptionsData,
+    cleanRules,
     onChangeRule, 
-    cleanRules, 
+    observerValue,
     ...rest 
 }, ref) => {
 
     const inputRef = useRef<HTMLInputElement>(null)
+
     const { fieldName, error, registerField } = useField(name)
+
     const [hasAnError, setHasAnError] = useState<boolean>(false)
     const [value, setValue] = useState<string>(initialValue || "")
 
+    const [inputIdleTimeoutID, setInputIdleTimeoutID] = useState<NodeJS.Timeout>()
+
     const [optionsList, setOptionsList] = useState<Option[]>(options || [])
 
+    const updateOptionsList = useCallback((value: string) => {
+        if(inputIdleTimeoutID !== undefined){
+            clearInterval(inputIdleTimeoutID)
+        }
+        const timeoutId = setTimeout(() => {
+            console.log("atualizando")
+
+            // colocar request
+            setOptionsList(prev => [
+                ...prev,
+                { value: value, label: `${prev.length + 1}` }
+            ])
+        }, 1000)
+
+        setInputIdleTimeoutID(timeoutId)
+    },[inputIdleTimeoutID])
+
     useImperativeHandle(ref, () => ({
+        fieldName: fieldName,
+        getValue: () => inputRef.current?.value as string,
+        refreshData: isAsyncOptionsData ? updateOptionsList : undefined,
         changeValue: (value) => {
             if(inputRef.current?.value){
                 inputRef.current.value = value || ""
@@ -56,8 +89,7 @@ const FormSelect: React.ForwardRefRenderFunction<FormSelectRef, FormSelectProps>
                     setHasAnError(false)
                 }
             }
-        },
-        getValue: () => inputRef.current?.value as string
+        }
     }))
 
     useEffect(() =>{
@@ -84,7 +116,11 @@ const FormSelect: React.ForwardRefRenderFunction<FormSelectRef, FormSelectProps>
         if(value === ""){
             setHasAnError(false)
         }
-    }, [value])
+
+        if(observerValue){
+            observerValue(fieldName)
+        }
+    }, [value, fieldName, observerValue ])
 
     useEffect(() => {
         setOptionsList(options || [])
@@ -116,6 +152,11 @@ const FormSelect: React.ForwardRefRenderFunction<FormSelectRef, FormSelectProps>
                         setValue(event.target.value)
                     }}
                 >
+                    { optionsList.length <= 0 &&
+                        <MenuItem value="" disabled>
+                            Nenhum resultado
+                        </MenuItem>
+                    }
                     { optionsList.map((option, index) => (
                         <MenuItem key={ index } value={ option.value }>
                             { option.label }

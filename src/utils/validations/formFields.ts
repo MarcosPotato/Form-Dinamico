@@ -4,7 +4,6 @@ export const fields: FieldsType[] = [
     {
         name: "field1",
         label: "Field 1",
-        initialValue: "value",
         desk_grid_size: 4,
         mobile_grid_size: 12,
         type: "text",
@@ -12,119 +11,33 @@ export const fields: FieldsType[] = [
         contentType: "text",
         isRequired: true,
         validationMessage: "Field 1 is required",
-        validationType: "text"
+        validationType: "text",
+        inputChildren: ["field3", "select"]
     },
     {
         name: "field3",
         label: "Field 3",
-        initialValue: "value",
         desk_grid_size: 4,
         mobile_grid_size: 12,
         type: "text",
         size: "small",
         contentType: "text",
         isRequired: true,
+        inputDependence: "field1",
         validationMessage: "E-mail Inválido",
-        validationType: "email"
-    },
-    {
-        name: "document",
-        label: "CPF/CNPJ",
-        mask: "document",
-        initialValue: "value",
-        desk_grid_size: 4,
-        mobile_grid_size: 12,
-        type: "text",
-        contentType: "text",
-        size: "small",
-        isRequired: false,
-        validationType: "document",
-        validationMessage: "Doumento inválido",
-        options: [
-            { label: "teste1", value: 1 },
-            { label: "teste2", value: 2 },
-            { label: "teste3", value: 3 },
-        ]
+        validationType: "email",
+        inputChildren: ["select"]
     },
     {
         name: "select",
-        label: "Combo",
-        initialValue: "1",
+        label: "Select",
         desk_grid_size: 4,
         mobile_grid_size: 12,
         type: "select",
         size: "small",
-        isRequired: false,
-        validationType: "text",
-        options: [
-            { label: "teste1", value: 1 },
-            { label: "teste2", value: 2 },
-            { label: "teste3", value: 3 },
-        ]
-    },
-    {
-        name: "autocomplete",
-        label: "Autocomplete",
-        desk_grid_size: 4,
-        mobile_grid_size: 12,
-        type: "autocomplete",
-        size: "small",
-        isRequired: false,
-        validationType: "text",
-        options: [
-            "teste1",
-            "teste2",
-            "teste3",
-        ]
-    },
-    {
-        name: "date",
-        label: "Date",
-        inputFormat: "dd/MM/yyyy",
-        views: ['day'],
-        desk_grid_size: 4,
-        mobile_grid_size: 12,
-        type: "date",
-        size: "small",
         isRequired: true,
+        isAsyncOptionsData: true,
+        inputDependence: "field3",
         validationType: "text"
-    },
-    {
-        name: "cep",
-        label: "CEP",
-        mask: "cep",
-        desk_grid_size: 4,
-        mobile_grid_size: 12,
-        type: "text",
-        size: "small",
-        contentType: "text",
-        isRequired: true,
-        validationMessage: "Field 1 is required",
-        validationType: "text"
-    },
-    {
-        name: "numbers",
-        label: "Numbers",
-        mask: "number",
-        desk_grid_size: 4,
-        mobile_grid_size: 12,
-        type: "text",
-        size: "small",
-        contentType: "text",
-        isRequired: true,
-        validationMessage: "Field 1 is required",
-        validationType: "text"
-    },
-    {
-        name: "oi",
-        label: "teste",
-        desk_grid_size: 4,
-        mobile_grid_size: 12,
-        type: "text",
-        size: "small",
-        contentType: "number",
-        isRequired: true,
-        validationMessage: "Field 1 is required",
-        validationType: "text"
-    },
+    }
 ]
