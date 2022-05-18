@@ -60,7 +60,7 @@ export const fields: FieldsType[] = [
     {
         name: "select",
         label: "Select",
-        desk_grid_size: 6,
+        desk_grid_size: 12,
         mobile_grid_size: 12,
         type: "select",
         size: "small",
@@ -79,25 +79,56 @@ export const fields: FieldsType[] = [
         }
     },
     {
-        name: "autocomplete",
-        label: "Autocomplete",
+        name: "fornecedor",
+        label: "Fornecedor",
         desk_grid_size: 6,
         mobile_grid_size: 12,
-        type: "autocomplete",
+        type: "searchText",
         size: "small",
+        contentType: "text",
         isRequired: true,
-        isAsyncOptionsData: true,
-        inputDependence: "field3",
+        validationMessage: "Field teste is required",
         validationType: "text",
-        options: ["teste"],
-        asyncResquest: {
-            endpoint: "/consultapadrao",
-            params: {
-                tabela: "CC2",
-                campos: "CC2_EST,CC2_CODMUN,CC2_MUN",
-                ordem: "CC2_MUN",
-                procura: "CC2_EST"
-            }
-        }
+        dialogType: "product"
+    },
+    {
+        name: "supplier",
+        label: "Fornecedor",
+        desk_grid_size: 6,
+        mobile_grid_size: 12,
+        type: "searchText",
+        size: "small",
+        contentType: "text",
+        isRequired: true,
+        validationMessage: "Field teste is required",
+        validationType: "text",
+        dialogType: "supplier",
+        inputChildren: ["loja", "razao"]
+    },
+    {
+        name: "loja",
+        label: "Loja",
+        desk_grid_size: 6,
+        mobile_grid_size: 12,
+        type: "text",
+        size: "small",
+        contentType: "text",
+        inputDependence: "supplier",
+        isRequired: true,
+        validationMessage: "Field 1 is required",
+        validationType: "text",
+    },
+    {
+        name: "razao",
+        label: "Razão Social",
+        desk_grid_size: 6,
+        mobile_grid_size: 12,
+        type: "text",
+        size: "small",
+        contentType: "text",
+        inputDependence: "supplier",
+        isRequired: true,
+        validationMessage: "Field 1 is required",
+        validationType: "text",
     }
 ]

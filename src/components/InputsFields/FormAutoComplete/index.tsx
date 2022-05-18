@@ -74,10 +74,10 @@ const FormAutoComplete: React.ForwardRefRenderFunction<InputFieldsRef,FormAutoCo
                     ...asyncResquest?.params,
                     pesquisa: value,
                     company: "01",
-                    brach: "01"
+                    brach: "0101"
                 },
                 headers: {
-                    authorization: "3c478422074463b32b3b276d8087cc8ac659f597dc3cab0300ed0b30d8eeb0c07d31c937498270a388dd29f10e6e3683278ebd8ae9661de65711161e6b387c34"
+                    authorization: "8c7cea11d0692ae1d3477d5cfb0d9781128af36d38b30f6c38bf987e1126ea8996ac56baa5bac59426a5e53b8eb3eeaa6a6417f77e6c6d10a25101960f8aece7"
                 }
             })
 

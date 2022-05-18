@@ -2,8 +2,9 @@ import FormInput from './FormInput'
 import FormSelect from './FormSelect'
 import FormDataPicker from './FormDataPicker'
 import FormAutoComplete from './FormAutoComplete'
+import FormInputWithSearch from './FormInputWithSearch'
 
-type InputsType = "text" | "select" | "autocomplete" | "date"
+export type InputsType = "text" | "select" | "autocomplete" | "date" | "searchText"
 
 export interface InputFieldsRef{
     fieldName: string
@@ -22,6 +23,8 @@ export const getInputField = (type: InputsType) => {
             return FormDataPicker
         case "autocomplete":
             return FormAutoComplete
+        case "searchText":
+            return FormInputWithSearch
         default:
             return FormInput
     }

@@ -1,4 +1,5 @@
 import { CalendarPickerView } from "@mui/lab"
+import { InputsType } from "../components/InputsFields"
 
 export interface FieldsType{
     name: string
@@ -6,7 +7,7 @@ export interface FieldsType{
     initialValue?: any
     desk_grid_size: number
     mobile_grid_size: number
-    type: "text" | "select" | "autocomplete" | "date"
+    type: InputsType
     isRequired: boolean
     validationMessage?: string
     validationType: string
@@ -15,6 +16,9 @@ export interface FieldsType{
     mask?: string
     inputDependence?: string
     inputChildren?: string[]
+    inputProps?: {
+        [key: string]: number | string | boolean
+    }
 
     options?: Array<any> //Only for autocomplete and select fields 
     isAsyncOptionsData?: boolean //Only for autocomplete and select fields
@@ -26,11 +30,9 @@ export interface FieldsType{
     }
 
     inputFormat?: string //Only for date fields
-
     views?: CalendarPickerView[] //Only for date fields
     minDate?: Date //Only for date fields
     maxDate?: Date //Only for date fields
-    inputProps?: {
-        [key: string]: number | string | boolean
-    }
+
+    dialogType?: "product" | "supplier" //Only for type searchText
 }
