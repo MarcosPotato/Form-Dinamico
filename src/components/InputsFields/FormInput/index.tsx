@@ -7,7 +7,7 @@ import {
     useImperativeHandle 
 } from "react"
 import { useField } from "@unform/core"
-import { InputFieldsRef } from "../index"
+import { InputFieldsRef, InputsType } from "../index"
 
 import { TextFieldProps, BaseTextFieldProps } from "@mui/material"
 
@@ -46,6 +46,7 @@ const FormInput: React.ForwardRefRenderFunction<InputFieldsRef, FormInputProps> 
 
     useImperativeHandle(ref, () => ({
         fieldName: fieldName,
+        type: "text" as InputsType,
         getValue: () => ( inputRef.current?.value as string),
         changeValue: (value) => {
             setValue(value)

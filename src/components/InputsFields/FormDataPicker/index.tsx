@@ -2,7 +2,7 @@ import React from 'react'
 import { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react'
 import { useField } from '@unform/core'
 
-import { InputFieldsRef } from '../index'
+import { InputFieldsRef, InputsType } from '../index'
 
 import ptBrLocale from 'date-fns/locale/pt-BR'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
@@ -48,6 +48,7 @@ const FormDatePicker: React.ForwardRefRenderFunction<InputFieldsRef, FormDatePic
 
     useImperativeHandle(ref, () => ({
         fieldName: fieldName,
+        type: "date" as InputsType,
         getValue: () => ( inputRef.current?.value || "" ),
         changeValue: (value) => {
             if(inputRef.current?.value){

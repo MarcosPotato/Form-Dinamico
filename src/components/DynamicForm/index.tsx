@@ -11,28 +11,34 @@ interface DynamicFormProps {
     fields: FieldsType[]
 }
 
-interface OnSettingValueProps{
-    fieldName: string
-
-}
-
 const DynamicForm: React.FC<DynamicFormProps> = ({ fields }) => {
 
     const fieldsReferences = useRef<Array<InputFieldsRef | null>>([])
 
-    const onSettingValue = useCallback((fieldName: string) => {
+    const onSettingValue = useCallback((fieldName: string, value?: string[]) => {
         const selectedField = fields.find(field => field.name === fieldName)
+        const selectedReference = fieldsReferences.current.find(reference => reference?.fieldName === fieldName)
         
         if(!selectedField){
             throw new Error ("Invalid fieldNames, this value not exist")
         }
 
+        if(!!selectedReference && !!value){
+            if(selectedReference.type === "searchText"){
+                selectedReference.changeValue(value[0])
+            }
+        }
+
         if(!!selectedField.inputChildren && selectedField.inputChildren.length > 0){
-            selectedField.inputChildren.forEach(child => {
+            selectedField.inputChildren.forEach((child, index) => {
                 const reference = fieldsReferences.current.find(reference => reference?.fieldName === child)
                 const selectedChild = fields.find(field => field.name === child)
 
-                reference?.changeValue("")
+                if(!!value){
+                    reference?.changeValue(value[index + 1])
+                } else{
+                    reference?.changeValue("")
+                }
 
                 if(!!selectedChild && selectedChild.inputDependence){        
                     const dependenceRef = fieldsReferences.current.find(reference => reference?.fieldName === selectedChild.inputDependence)
@@ -66,7 +72,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ fields }) => {
                             ref={ ref => fieldsReferences.current[index] = ref }
                             onChangeRule={ field.mask ? inputMasks[field.mask] : undefined }
                             onPasteRule={ field.mask ? inputMasks[field.mask] : undefined }  
-                            observerValue={ (!!field.inputChildren || !!field.inputDependence) ? onSettingValue : undefined }
+                            observerValue={ (!!field.inputChildren || !!field.inputDependence || field.type === "searchText") ? onSettingValue : undefined }
                         />
                     </Grid>
                 )

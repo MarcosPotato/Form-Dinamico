@@ -11,7 +11,7 @@ import { useField } from "@unform/core"
 
 import api from "../../../services/api"
 
-import { InputFieldsRef } from "../index"
+import { InputFieldsRef, InputsType } from "../index"
 
 import {
     Select,
@@ -113,6 +113,7 @@ const FormSelect: React.ForwardRefRenderFunction<InputFieldsRef, FormSelectProps
 
     useImperativeHandle(ref, () => ({
         fieldName: fieldName,
+        type: "select" as InputsType,
         getValue: () => inputRef.current?.value as string,
         refreshData: isAsyncOptionsData ? updateOptionsList : undefined,
         changeValue: (value) => {

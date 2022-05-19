@@ -28,7 +28,7 @@ interface RequestSuppliersParams{
 }
 
 export interface Supplier{
-    id: number
+    id?: number
     cod: string
     loja: string
     cnpj: string
@@ -40,7 +40,7 @@ export interface Supplier{
 
 export interface SelectSupplierProps{
     initialSearch?: string
-    onSelect: (products: Supplier) => void
+    onSelect: (products: string[]) => void
 }
 
 const SelectSupplier: React.ForwardRefRenderFunction<DialogRef, SelectSupplierProps> = ({ initialSearch, onSelect }, ref) => {
@@ -112,7 +112,28 @@ const SelectSupplier: React.ForwardRefRenderFunction<DialogRef, SelectSupplierPr
             setIsLoading(false)
         }
 
+        setSuppliersList([
+            {
+                id: 1,
+                cod: "01",
+                loja: "01",
+                cnpj: "teste",
+                reason: "fornecedor LTDA",
+                name: "fornecedor",
+                ie: "teste313",
+                email: "dasda",
+            }
+        ])
+
     }, [filterContent/* , addToast */])
+
+    const tranformValues = useCallback((value: Supplier): string[] => {
+        const clonedObject = Object.assign({}, value)
+        delete clonedObject.id
+        const arrayValue = Object.keys(clonedObject).map(item => clonedObject[item])
+
+        return arrayValue
+    }, [])
 
     useImperativeHandle(ref, () => ({
         dialogName: "supplier",
@@ -169,7 +190,7 @@ const SelectSupplier: React.ForwardRefRenderFunction<DialogRef, SelectSupplierPr
                         onRowClick={row => setSelectedItem(row.row as Supplier)}
                         onRowDoubleClick={ row => {
                             setSelectedItem(row.row as Supplier)
-                            onSelect(row.row as Supplier)
+                            onSelect(tranformValues(row.row as Supplier))
                             handleClose()
                         }}
                         components={{
@@ -199,7 +220,7 @@ const SelectSupplier: React.ForwardRefRenderFunction<DialogRef, SelectSupplierPr
                         size='large'
                         fullWidth
                         onClick={ () => {
-                            onSelect(selectedItem)
+                            onSelect(tranformValues(selectedItem))
                             handleClose()
                         }}
                     >

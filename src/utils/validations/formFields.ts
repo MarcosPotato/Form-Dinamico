@@ -79,19 +79,6 @@ export const fields: FieldsType[] = [
         }
     },
     {
-        name: "fornecedor",
-        label: "Fornecedor",
-        desk_grid_size: 6,
-        mobile_grid_size: 12,
-        type: "searchText",
-        size: "small",
-        contentType: "text",
-        isRequired: true,
-        validationMessage: "Field teste is required",
-        validationType: "text",
-        dialogType: "product"
-    },
-    {
         name: "supplier",
         label: "Fornecedor",
         desk_grid_size: 6,
@@ -103,7 +90,7 @@ export const fields: FieldsType[] = [
         validationMessage: "Field teste is required",
         validationType: "text",
         dialogType: "supplier",
-        inputChildren: ["loja", "razao"]
+        inputChildren: ["loja", "cnpj"]
     },
     {
         name: "loja",
@@ -119,8 +106,8 @@ export const fields: FieldsType[] = [
         validationType: "text",
     },
     {
-        name: "razao",
-        label: "Razão Social",
+        name: "cnpj",
+        label: "CNPJ",
         desk_grid_size: 6,
         mobile_grid_size: 12,
         type: "text",

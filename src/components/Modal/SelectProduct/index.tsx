@@ -49,10 +49,11 @@ export interface Product{
 }
 
 export interface SelectProductProps{
-    onSelect(products: Array<Product>): void
+    disableMultiSelection?: boolean
+    onSelect(products: string[] | Product[]): void
 }
 
-const SelectProduct: React.ForwardRefRenderFunction<DialogRef, SelectProductProps> = ({ onSelect }, ref) => {
+const SelectProduct: React.ForwardRefRenderFunction<DialogRef, SelectProductProps> = ({ onSelect, disableMultiSelection }, ref) => {
 
     const [open, setOpen] = useState<boolean>(false)
 
@@ -71,11 +72,28 @@ const SelectProduct: React.ForwardRefRenderFunction<DialogRef, SelectProductProp
         { field: 'um', headerName: "Unidade de Medida", flex: 1, align: "center", headerAlign: "center", minWidth: 170}
     ])
 
+    const tranformValues = useCallback((value: Product[]): string[] | Product[] => {
+        if(!disableMultiSelection){
+            return value
+        }
+
+        const clonedObject = Object.assign({}, value[0])
+        const arrayValue = Object.keys(clonedObject).map(item => clonedObject[item])
+
+        return arrayValue
+    }, [disableMultiSelection])
+
     const selectProduct = useCallback(( row: Product): void => {
         const isSelected = selectedItens.findIndex(productSelected => productSelected.codigo === row.codigo)
 
-        if(isSelected < 0){ setSelectedItens(prev => [...prev, row])}
-    }, [selectedItens])
+        if(isSelected < 0){
+            if(!disableMultiSelection){
+                setSelectedItens(prev => [...prev, row])
+            } else{
+                setSelectedItens([row])
+            }
+        }
+    }, [selectedItens, disableMultiSelection])
 
     const unselectProduct = useCallback(( id: string ): void => {
         setSelectedItens(prev => prev.filter(product => product.codigo !== id))
@@ -124,6 +142,23 @@ const SelectProduct: React.ForwardRefRenderFunction<DialogRef, SelectProductProp
         } finally{
             setIsLoading(false)
         }
+
+        setProductsList([
+            {
+                codigo: "info.B1_COD",
+                descricao: "info.B1_DESC",
+                um: "info.B1_UM",
+                cc: "info.B1_CC",
+                ncm: "info.B1_POSIPI"
+            },
+            {
+                codigo: "info.B1_COD2",
+                descricao: "info.B1_DESC2",
+                um: "info.B1_UM2",
+                cc: "info.B1_CC2",
+                ncm: "info.B1_POSIPI2"
+            }
+        ])
     }, [filterContent/* , addToast */])
 
     const handleClose = useCallback(() => {
@@ -197,7 +232,7 @@ const SelectProduct: React.ForwardRefRenderFunction<DialogRef, SelectProductProp
                     </div>
                 </SearchField>
                 <ProductsTable>
-                    { selectedItens.length > 0 && 
+                    { (selectedItens.length > 0 && !disableMultiSelection) && 
                         <p onClick={ () => setViewSelectedProducts(prev => !prev) }>
                             { viewSelectedProducts ? "Voltar" : `${ selectedItens.length } produtos selecionados` }
                         </p>
@@ -240,7 +275,7 @@ const SelectProduct: React.ForwardRefRenderFunction<DialogRef, SelectProductProp
                         size='large'
                         fullWidth
                         onClick={ () => {
-                            onSelect(selectedItens)
+                            onSelect(tranformValues(selectedItens))
                             handleClose()
                         }}
                     >

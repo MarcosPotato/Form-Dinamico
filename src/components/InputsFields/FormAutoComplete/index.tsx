@@ -11,7 +11,7 @@ import { useField } from "@unform/core"
 
 import api from "../../../services/api"
 
-import { InputFieldsRef } from '../index'
+import { InputFieldsRef, InputsType } from '../index'
 
 import { Autocomplete, TextFieldProps } from '@mui/material'
 
@@ -106,6 +106,7 @@ const FormAutoComplete: React.ForwardRefRenderFunction<InputFieldsRef,FormAutoCo
 
     useImperativeHandle(ref, () => ({
         fieldName: fieldName,
+        type: "autocomplete" as InputsType,
         getValue: () => ( inputRef.current?.value || "" ),
         refreshData: isAsyncOptionsData ? updateOptionsList : undefined,
         changeValue: (value) => {

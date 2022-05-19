@@ -7,7 +7,7 @@ import {
     useImperativeHandle 
 } from "react"
 import { useField } from "@unform/core"
-import { InputFieldsRef } from "../index"
+import { InputFieldsRef, InputsType } from "../index"
 
 import { DialogTypes, getDialog, DialogRef } from "../../Modal"
 
@@ -21,7 +21,7 @@ interface FormInputWithSearchProps extends BaseTextFieldProps{
     initialValue?: string,
     loading?: boolean
     dialogType?: DialogTypes,
-    observerValue?: (fieldName: string) => void
+    observerValue?: (fieldName: string, value?: string[]) => void
     onChangeRule?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, input: TextFieldProps | null, value?: any) => void
     onPasteRule?: (event: any, input: TextFieldProps | null) => void
     cleanRules?: () => void
@@ -60,6 +60,7 @@ const FormInputWithSearch: React.ForwardRefRenderFunction<InputFieldsRef, FormIn
 
     useImperativeHandle(ref, () => ({
         fieldName: fieldName,
+        type: "searchText" as InputsType,
         getValue: () => ( inputRef.current?.value as string),
         changeValue: (value) => {
             setValue(value)
@@ -169,7 +170,13 @@ const FormInputWithSearch: React.ForwardRefRenderFunction<InputFieldsRef, FormIn
             </Container>
             <Dialog 
                 ref={ dialogRef }
-                onSelect={ (teste) => console.log(teste) }
+                disableMultiSelection
+                onSelect={ (values: string[]) => {
+                    console.log(values)
+                    if(!!observerValue){
+                        observerValue(fieldName, values)
+                    }
+                }}
             />
         </>
     )

@@ -8,6 +8,7 @@ export type InputsType = "text" | "select" | "autocomplete" | "date" | "searchTe
 
 export interface InputFieldsRef{
     fieldName: string
+    type: InputsType
     changeValue(value: string): void
     getValue(): string | unknown
     refreshData?: (requiredValue: string) => void
